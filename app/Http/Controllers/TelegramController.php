@@ -34,7 +34,7 @@ class TelegramController extends Controller
             // Получаем информацию о члене группы (боте)
             $response = Telegram::getChatMember([
                 'chat_id' => $group->chat_url,
-                'user_id' => env('TELEGRAM_BOT_ID'), // ID вашего бота
+                'user_id' => env('TELEGRAM_BOT_ID'),
             ]);
 
             // Проверяем, является ли бот администратором

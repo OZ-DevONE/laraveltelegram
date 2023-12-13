@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class TelegramGroup extends Model
 {
     use HasFactory;
-    
+
     // Защита от массового назначения
     protected $guarded = [];
 
@@ -20,4 +20,7 @@ class TelegramGroup extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    // Добавляем свойство для ID чата
+    protected $fillable = ['user_id', 'telegram_username', 'chat_url', 'chat_id', 'is_active'];
 }

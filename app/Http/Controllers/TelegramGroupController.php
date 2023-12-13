@@ -11,15 +11,16 @@ class TelegramGroupController extends Controller
     {
         $request->validate([
             'telegram_username' => 'required',
-            'chat_url' => 'required|url'
+            'chat_id' => 'required'
         ]);
-
+        
         $telegramGroup = new TelegramGroup();
         $telegramGroup->user_id = auth()->id();
         $telegramGroup->telegram_username = $request->telegram_username;
-        $telegramGroup->chat_url = $request->chat_url;
+        $telegramGroup->chat_id = $request->chat_id;
         $telegramGroup->save();
-
+        
         return redirect()->back()->with('status', 'Данные добавлены.');
+        
     }
 }

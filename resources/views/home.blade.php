@@ -10,11 +10,12 @@
             <input type="text" class="form-control" id="telegramUsername" name="telegram_username" required>
         </div>
         <div class="mb-3">
-            <label for="chatUrl" class="form-label">Ссылка на чат/группу</label>
-            <input type="url" class="form-control" id="chatUrl" name="chat_url" required>
+            <label for="chatId" class="form-label">ID чата/группы</label>
+            <input type="text" class="form-control" id="chatId" name="chat_id" required>
         </div>
         <button type="submit" class="btn btn-primary">Добавить</button>
     </form>
+    
 
     <h2>Активные чаты</h2>
     @foreach ($activeChats as $chat)
