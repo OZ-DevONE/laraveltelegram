@@ -4,12 +4,15 @@
 @section('content')
 </head>
 <style>
-    #myVideo {
-        position: fixed;
+    #myVideo::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
         right: 0;
         bottom: 0;
-        min-width: 100%; 
-        min-height: 100%;
+        background: rgba(0, 0, 0, 0.541); /* Полупрозрачный черный слой */
+        z-index: -1; /* Убедитесь, что слой находится над видео, но под контентом */
     }
 
     .cover-container {
