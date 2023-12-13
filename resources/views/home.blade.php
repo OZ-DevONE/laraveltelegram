@@ -1,4 +1,4 @@
-@extends('layaouts.app')
+@extends('layouts.app')
 
 @section('content')
 <main class="container">
@@ -15,5 +15,25 @@
         </div>
         <button type="submit" class="btn btn-primary">Добавить</button>
     </form>
+
+    <h2>Активные чаты</h2>
+    @foreach ($activeChats as $chat)
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ $chat->telegram_username }}</h5>
+                <p class="card-text">{{ $chat->chat_url }}</p>
+            </div>
+        </div>
+    @endforeach
+
+    <h2>Неактивные чаты</h2>
+    @foreach ($inactiveChats as $chat)
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ $chat->telegram_username }}</h5>
+                <p class="card-text">{{ $chat->chat_url }}</p>
+            </div>
+        </div>
+    @endforeach
 </main>
 @endsection
