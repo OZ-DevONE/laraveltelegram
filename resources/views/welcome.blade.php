@@ -4,20 +4,35 @@
 @section('content')
 </head>
 <style>
-    #myVideo::after {
-        content: '';
+    .video-container {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        min-width: 100%; 
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        z-index: -1; /* Помещаем видео под контент */
+        overflow: hidden;
+    }
+
+    #myVideo {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Гарантирует, что видео будет покрывать весь элемент */
+    }
+
+    .video-overlay {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.541); /* Полупрозрачный черный слой */
-        z-index: -1; /* Убедитесь, что слой находится над видео, но под контентом */
-    }
-
-    .cover-container {
-        position: relative;
-        z-index: 1;
+        background: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный слой */
+        z-index: 1; /* Помещаем затемнение над видео */
     }
 
     /* Стиль кнопки */
@@ -38,9 +53,12 @@
     }
 </style>
 <body class="d-flex h-100 text-center text-white bg-dark">
-    <video autoplay muted loop id="myVideo">
-        <source src="https://static.vecteezy.com/system/resources/previews/006/405/981/mp4/cyber-security-of-digital-data-network-protection-binary-code-and-padlock-connectivity-background-concept-free-video.mp4" type="video/mp4">
-    </video>
+    <div class="video-container">
+        <video autoplay muted loop id="myVideo" class="embed-responsive-item">
+            <source src="https://static.vecteezy.com/system/resources/previews/006/405/981/mp4/cyber-security-of-digital-data-network-protection-binary-code-and-padlock-connectivity-background-concept-free-video.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+    </div>    
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
         <header class="mb-auto">
         <div>
