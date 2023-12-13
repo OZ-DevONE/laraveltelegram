@@ -5,6 +5,7 @@ use App\Http\Controllers\BotStatusController;
 use App\Http\Controllers\TelegramGroupController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,3 +67,9 @@ Route::controller(AuthUser::class)->name('auth.')->group(function(){
 
 //Добавление чата/группы
 Route::post('/telegram-add', [TelegramGroupController::class, 'add'])->name('telegram.add');
+
+
+Route::post('/bot/getupdates', function() {
+    $updates = Telegram::getUpdates();
+    return (json_encode($updates));
+});
