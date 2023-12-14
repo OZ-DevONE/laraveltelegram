@@ -49,8 +49,12 @@ class TelegramController extends Controller
             }
             $group->save();
         }
-    
-        return view('home', ['groups' => $telegramGroups]);
+        // После обновления статусов, получаем актуальные данные
+        $activeChats = TelegramGroup::where('is_active', true)->get();
+        $inactiveChats = TelegramGroup::where('is_active', false)->get();
+
+        // Передаем данные в представление
+        return view('home', ['groups' => $telegramGroups, 'activeChats' => $activeChats, 'inactiveChats' => $inactiveChats]);
     }
     
 }
