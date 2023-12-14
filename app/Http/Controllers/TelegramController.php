@@ -34,7 +34,6 @@ class TelegramController extends Controller
     {
         $telegramGroups = TelegramGroup::all(); // Получаем все группы
         $botId = config('services.telegram.bot_id');
-        dd($telegramGroups);
         foreach ($telegramGroups as $group) {
             // Получаем информацию о члене группы (боте)
             $response = Telegram::getChatMember([
@@ -49,7 +48,6 @@ class TelegramController extends Controller
             } else {
                 $group->is_bot_admin = false;
             }
-            dd($response);
             $group->save();
         }
     
