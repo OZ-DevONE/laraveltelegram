@@ -32,7 +32,9 @@ Route::post('/send-to-all-chats', [HomeController::class, 'sendToAllChats'])->na
 //Группа пользователя
 Route::name('user.')->group(function(){
     // Роутер отображения страницы юзера
-    Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware('auth');
+    Route::get('/home', function(){
+        return view('home');
+    })->name('home')->middleware('auth');
 
     // Роутер пользователя, страница входа в личный кабинет.
     Route::get('/login', function(){
