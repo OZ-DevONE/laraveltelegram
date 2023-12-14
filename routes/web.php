@@ -69,3 +69,5 @@ Route::controller(AuthUser::class)->name('auth.')->group(function(){
 Route::post('/telegram-add', [TelegramGroupController::class, 'add'])->name('telegram.add');
 
 Route::post('/telegram-webhook', [TelegramController::class, 'webhook']);
+
+Route::get('/check-bot-status', [TelegramController::class, 'checkBotAdminStatus']);
