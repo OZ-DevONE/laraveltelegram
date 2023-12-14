@@ -6,6 +6,7 @@ use App\Models\TelegramGroup;
 use Illuminate\Http\Request;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\FileUpload\InputFile;
+use Illuminate\Support\Facades\Validator;
 
 class HomeController extends Controller
 {
@@ -19,6 +20,16 @@ class HomeController extends Controller
 
     public function sendToAllChats(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'text' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9\s.,!?-]+$/'],
+            'image' => ['url', 'max:255'], 
+        ]);
+    
+        // Проверка на ошибки валидации
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         $text = $request->input('text');
         $imageUrl = $request->input('image'); // URL изображения
 
