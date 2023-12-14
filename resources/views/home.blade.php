@@ -22,7 +22,7 @@
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">{{ $chat->telegram_username }}</h5>
-                <p class="card-text">{{ $chat->chat_url }}</p>
+                <p class="card-text">{{ $chat->chat_id }}</p>
             </div>
         </div>
     @endforeach
@@ -32,7 +32,7 @@
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">{{ $chat->telegram_username }}</h5>
-                <p class="card-text">{{ $chat->chat_url }}</p>
+                <p class="card-text">{{ $chat->chat_id }}</p>
             </div>
         </div>
     @endforeach
