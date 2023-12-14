@@ -30,7 +30,7 @@
         <button type="submit">Отправить во все чаты</button>
     </form>
 
-    {{-- <h2>Активные чаты</h2>
+    <h2>Активные чаты</h2>
     @foreach ($activeChats as $chat)
         <div class="card mb-3">
             <div class="card-body">
@@ -48,6 +48,6 @@
                 <p class="card-text">{{ $chat->chat_id }}</p>
             </div>
         </div>
-    @endforeach --}}
+    @endforeach
 </main>
 @endsection

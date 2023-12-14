@@ -19,6 +19,8 @@ class HomeController extends Controller
 
     public function sendToAllChats(Request $request)
     {
+        $activeChats = TelegramGroup::where('is_active', true)->get();
+        $inactiveChats = TelegramGroup::where('is_active', false)->get();
         $text = $request->input('text');
         $imageUrl = $request->input('image'); // URL изображения
 
@@ -40,7 +42,7 @@ class HomeController extends Controller
             }
         }
 
-        return redirect()->back()->with('status', 'Сообщение отправлено во все активные чаты');
+        return view('home', ['activeChats' => $activeChats, 'inactiveChats' => $inactiveChats]);
     }
     
 }
