@@ -9,13 +9,13 @@ use Telegram\Bot\FileUpload\InputFile;
 
 class HomeController extends Controller
 {
-    // public function home()
-    // {
-    //     $activeChats = TelegramGroup::where('is_active', true)->get();
-    //     $inactiveChats = TelegramGroup::where('is_active', false)->get();
+    public function home()
+    {
+        $activeChats = TelegramGroup::where('is_active', true)->get();
+        $inactiveChats = TelegramGroup::where('is_active', false)->get();
     
-    //     return view('home', ['activeChats' => $activeChats, 'inactiveChats' => $inactiveChats]);
-    // }
+        return view('home', ['activeChats' => $activeChats, 'inactiveChats' => $inactiveChats]);
+    }
 
     public function sendToAllChats(Request $request)
     {
@@ -42,7 +42,7 @@ class HomeController extends Controller
             }
         }
 
-        return view('home', ['activeChats' => $activeChats, 'inactiveChats' => $inactiveChats]);
+        return redirect()->back()->with('status', 'Сообщение отправлено во все активные чаты');
     }
     
 }
