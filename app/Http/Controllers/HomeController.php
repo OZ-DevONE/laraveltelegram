@@ -19,8 +19,6 @@ class HomeController extends Controller
 
     public function sendToAllChats(Request $request)
     {
-        $activeChats = TelegramGroup::where('is_active', true)->get();
-        $inactiveChats = TelegramGroup::where('is_active', false)->get();
         $text = $request->input('text');
         $imageUrl = $request->input('image'); // URL изображения
 
