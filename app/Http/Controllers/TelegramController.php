@@ -13,10 +13,11 @@ class TelegramController extends Controller
 
         // Проверяем, есть ли информация о новом участнике чата
         $newMember = $update->getMessage()->getNewChatMembers();
+        $botId = config('services.telegram.bot_id');
         if ($newMember) {
             foreach ($newMember as $member) {
                 // Проверяем, является ли новый участник нашим ботом
-                if ($member->getId() == env('TELEGRAM_BOT_ID')) {
+                if ($member->getId() == $botId) {
                     // Отправляем сообщение в чат
                     Telegram::sendMessage([
                         'chat_id' => $update->getMessage()->getChat()->getId(),
