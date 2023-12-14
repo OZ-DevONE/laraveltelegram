@@ -32,25 +32,27 @@ class TelegramController extends Controller
 
     public function checkBotAdminStatus()
     {
-        $telegramGroups = TelegramGroup::where('is_active', true)->get();
-
+        $telegramGroups = TelegramGroup::all(); // Получаем все группы
+    
         foreach ($telegramGroups as $group) {
             // Получаем информацию о члене группы (боте)
             $response = Telegram::getChatMember([
-                'chat_id' => $group->chat_url,
+                'chat_id' => $group->chat_id,
                 'user_id' => env('TELEGRAM_BOT_ID'),
             ]);
-
+    
             // Проверяем, является ли бот администратором
             if ($response->getStatus() === 'administrator') {
+                $group->is_active = true;
                 $group->is_bot_admin = true;
             } else {
                 $group->is_bot_admin = false;
             }
-
+    
             $group->save();
         }
-
+    
         return view('home', ['groups' => $telegramGroups]);
     }
+    
 }
