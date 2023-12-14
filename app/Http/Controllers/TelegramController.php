@@ -45,7 +45,7 @@ class TelegramController extends Controller
             if ($response->getStatus() === 'administrator') {
                 $group->is_active = true;
             } else {
-                $group->is_bot_admin = false;
+                $group->is_active = false;
             }
             $group->save();
         }
