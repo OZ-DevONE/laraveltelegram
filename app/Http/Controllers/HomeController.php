@@ -9,7 +9,6 @@ class HomeController extends Controller
 {
     public function home()
     {
-        $this->checkBotAdminStatus();
         $activeChats = TelegramGroup::where('is_active', true)->get();
         $inactiveChats = TelegramGroup::where('is_active', false)->get();
     
