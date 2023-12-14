@@ -21,11 +21,11 @@
         @csrf
         <div>
             <label for="text">Текст:</label>
-            <textarea id="text" name="text" required></textarea>
+            <textarea class="form-control" id="text" name="text" required></textarea>
         </div>
         <div>
             <label for="image">Ссылка на изображение:</label>
-            <input type="url" id="image" name="image">
+            <input class="form-control" type="url" id="image" name="image">
         </div>
         <button type="submit">Отправить во все чаты</button>
     </form>
