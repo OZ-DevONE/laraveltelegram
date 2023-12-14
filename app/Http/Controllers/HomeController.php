@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\TelegramGroup;
 use Illuminate\Http\Request;
 use Telegram\Bot\Laravel\Facades\Telegram;
+use Telegram\Bot\FileUpload\InputFile;
 
 class HomeController extends Controller
 {
@@ -19,7 +20,7 @@ class HomeController extends Controller
     public function sendToAllChats(Request $request)
     {
         $text = $request->input('text');
-        $image = $request->input('image'); // предполагается, что это URL изображения
+        $imageUrl = $request->input('image'); // URL изображения
 
         $activeChats = TelegramGroup::where('is_active', true)->get();
 
@@ -29,7 +30,9 @@ class HomeController extends Controller
                 'text' => $text
             ]);
 
-            if ($image) {
+            if ($imageUrl) {
+                // Загрузка и отправка изображения
+                $image = InputFile::create($imageUrl, basename($imageUrl));
                 Telegram::sendPhoto([
                     'chat_id' => $chat->chat_id,
                     'photo' => $image
