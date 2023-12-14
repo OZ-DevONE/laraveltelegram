@@ -26,6 +26,8 @@ Route::get('/', function () {
 
 Route::get('/bot-status', [BotStatusController::class, 'index']); // TEST STATUS
 
+Route::post('/send-to-all-chats', [HomeController::class, 'sendToAllChats'])->name('send-to-all-chats')->middleware('auth');
+
 
 //Группа пользователя
 Route::name('user.')->group(function(){

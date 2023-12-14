@@ -17,6 +17,19 @@
     </form>
     
 
+    <form action="{{ route('send-to-all-chats') }}" method="POST">
+        @csrf
+        <div>
+            <label for="text">Текст:</label>
+            <textarea id="text" name="text" required></textarea>
+        </div>
+        <div>
+            <label for="image">Ссылка на изображение:</label>
+            <input type="url" id="image" name="image">
+        </div>
+        <button type="submit">Отправить во все чаты</button>
+    </form>
+
     <h2>Активные чаты</h2>
     @foreach ($activeChats as $chat)
         <div class="card mb-3">
