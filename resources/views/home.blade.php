@@ -16,7 +16,7 @@
         <button type="submit" class="btn btn-primary">Добавить</button>
     </form>
     
-
+    <h2>Отправка поста в активные чаты</h2>
     <form action="{{ route('send-to-all-chats') }}" method="POST">
         @csrf
         <div>
@@ -27,7 +27,7 @@
             <label for="image">Ссылка на изображение:</label>
             <input class="form-control" type="url" id="image" name="image">
         </div>
-        <button type="submit">Отправить во все чаты</button>
+        <button type="submit" class="btn btn-primary">Отправить во все чаты</button>
     </form>
 
     <h2>Активные чаты</h2>
