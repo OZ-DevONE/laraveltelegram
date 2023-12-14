@@ -70,4 +70,4 @@ Route::post('/telegram-add', [TelegramGroupController::class, 'add'])->name('tel
 
 Route::post('/telegram-webhook', [TelegramController::class, 'webhook']);
 
-Route::get('/check-bot-status', [TelegramController::class, 'checkBotAdminStatus']);
+// Route::get('/check-bot-status', [TelegramController::class, 'checkBotAdminStatus']);
