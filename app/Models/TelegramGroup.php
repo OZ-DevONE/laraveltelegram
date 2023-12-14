@@ -22,5 +22,5 @@ class TelegramGroup extends Model
     }
 
     // Добавляем свойство для ID чата
-    protected $fillable = ['user_id', 'telegram_username', 'chat_url', 'chat_id', 'is_active'];
+    protected $fillable = ['user_id', 'telegram_username', 'chat_id', 'is_active'];
 }
