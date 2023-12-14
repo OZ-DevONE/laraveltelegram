@@ -9,17 +9,17 @@ class TelegramGroup extends Model
 {
     use HasFactory;
 
-    // Защита от массового назначения
-    protected $guarded = [];
+    // // Защита от массового назначения
+    // protected $guarded = [];
 
-    // Указываем имя таблицы, если оно не соответствует стандартному названию модели во множественном числе
-    protected $table = 'telegram_groups';
+    // // Указываем имя таблицы, если оно не соответствует стандартному названию модели во множественном числе
+    // protected $table = 'telegram_groups';
 
-    // Связь с моделью User (предполагая, что у вас есть такая модель)
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
+    // // Связь с моделью User (предполагая, что у вас есть такая модель)
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class, 'user_id');
+    // }
 
     // Добавляем свойство для ID чата
     protected $fillable = ['user_id', 'telegram_username', 'chat_id', 'is_active'];
