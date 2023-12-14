@@ -11,17 +11,20 @@ class TelegramController extends Controller
     {
         $update = Telegram::commandsHandler(true);
 
-        // Получаем текст сообщения
-        $text = $update->getMessage()->getText();
-
-        // Получаем ID чата
-        $chat_id = $update->getMessage()->getChat()->getId();
-
-        // Отправляем ответное сообщение
-        Telegram::sendMessage([
-            'chat_id' => $chat_id, 
-            'text' => 'Вы отправили: ' . $text
-        ]);
+        // Проверяем, есть ли информация о новом участнике чата
+        $newMember = $update->getMessage()->getNewChatMembers();
+        if ($newMember) {
+            foreach ($newMember as $member) {
+                // Проверяем, является ли новый участник нашим ботом
+                if ($member->getId() == env('TELEGRAM_BOT_ID')) {
+                    // Отправляем сообщение в чат
+                    Telegram::sendMessage([
+                        'chat_id' => $update->getMessage()->getChat()->getId(),
+                        'text' => 'Подключен'
+                    ]);
+                }
+            }
+        }
 
         return response()->json(['status' => 'success']);
     }
