@@ -76,7 +76,9 @@ Route::post('/telegram-add', [TelegramGroupController::class, 'add'])->name('tel
 
 Route::post('/telegram-webhook', [TelegramController::class, 'webhook']);
 
-// Route::get('/check-bot-status', [TelegramController::class, 'checkBotAdminStatus']);
+Route::get('/about-us', function () {
+    return view('about');
+})->name('about');
 
 Route::get('/chats/{id}/edit', [ChatController::class, 'edit'])->name('chats.edit');
 Route::put('/chats/{id}', [ChatController::class, 'update'])->name('chats.update');
