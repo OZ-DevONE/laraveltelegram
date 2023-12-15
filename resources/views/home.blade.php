@@ -37,7 +37,7 @@
 
 
 @section('content')
-<main class="container">
+<div class="container">
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -107,5 +107,5 @@
         </div>
     @endforeach
     
-</main>
+</div>
 @endsection
