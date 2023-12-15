@@ -1,9 +1,11 @@
 @extends('layaouts.app')
 
+@section('head')
+<link rel="stylesheet" href="{{asset('/css/cover.css')}}"> 
+@endsection
 
 @section('content')
 </head>
-<link rel="stylesheet" href="{{asset('/css/cover.css')}}">
 <style>
     .video-container {
         position: fixed;
