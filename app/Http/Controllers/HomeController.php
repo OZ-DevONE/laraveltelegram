@@ -21,9 +21,19 @@ class HomeController extends Controller
     public function sendToAllChats(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'text' => ['required', 'string', 'max:255', 'regex:/^[\p{L}\p{N}\p{P}\p{Zs}]+$/u'],
-            'image' => ['required', 'url', 'regex:/\.(jpeg|jpg|png|gif|mp4)$/i'], 
+            'text' => [
+                'required', 
+                'string', 
+                'max:255', 
+                'regex:/^[\p{L}\p{N}\p{P}\p{Zs}]+$/u'
+            ],
+            'image' => [
+                'nullable', 
+                'url', 
+                'regex:/\.(jpeg|jpg|png|gif|mp4)$/i'
+            ], 
         ]);
+        
     
         // Проверка на ошибки валидации
         if ($validator->fails()) {
