@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use App\Http\Controllers\TelegramController;
+use App\Http\Controllers\ChatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,3 +77,7 @@ Route::post('/telegram-add', [TelegramGroupController::class, 'add'])->name('tel
 Route::post('/telegram-webhook', [TelegramController::class, 'webhook']);
 
 // Route::get('/check-bot-status', [TelegramController::class, 'checkBotAdminStatus']);
+
+Route::get('/chats/{id}/edit', [ChatController::class, 'edit'])->name('chats.edit');
+Route::put('/chats/{id}', [ChatController::class, 'update'])->name('chats.update');
+Route::delete('/chats/{id}', [ChatController::class, 'destroy'])->name('chats.destroy');

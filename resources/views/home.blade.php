@@ -45,18 +45,31 @@
             <div class="card-body">
                 <h5 class="card-title">{{ $chat->telegram_username }}</h5>
                 <p class="card-text">{{ $chat->chat_id }}</p>
+                <a href="{{ route('chats.edit', $chat->id) }}" class="btn btn-primary">Редактировать</a>
+                <form action="{{ route('chats.destroy', $chat->id) }}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
             </div>
         </div>
     @endforeach
-
+    
     <h2>Неактивные чаты</h2>
     @foreach ($inactiveChats as $chat)
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">{{ $chat->telegram_username }}</h5>
                 <p class="card-text">{{ $chat->chat_id }}</p>
+                <a href="{{ route('chats.edit', $chat->id) }}" class="btn btn-primary">Редактировать</a>
+                <form action="{{ route('chats.destroy', $chat->id) }}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
             </div>
         </div>
     @endforeach
+    
 </main>
 @endsection
