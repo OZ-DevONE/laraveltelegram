@@ -24,16 +24,14 @@ class HomeController extends Controller
             'text' => [
                 'required', 
                 'string', 
-                'max:255', 
-                'regex:/^[\p{L}\p{N}\p{P}\p{Zs}]+$/u'
+                'max:255'
             ],
             'image' => [
                 'nullable', 
                 'url', 
                 'regex:/\.(jpeg|jpg|png|gif|mp4)$/i'
             ], 
-        ]);
-        
+        ]);        
     
         // Проверка на ошибки валидации
         if ($validator->fails()) {
