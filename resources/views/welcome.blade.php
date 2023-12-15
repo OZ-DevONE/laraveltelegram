@@ -70,7 +70,7 @@
             <nav class="nav nav-masthead justify-content-center float-md-end">
             <a class="nav-link active" aria-current="page" href="{{ route('user.home') }}">Главная</a>
             <a class="nav-link active" href="{{ route('user.login') }}">Войти</a>
-            <a class="nav-link" href="{{ url('/about') }}">О нас</a>
+            <a class="nav-link active" href="{{ url('/about') }}">О нас</a>
             </nav>
         </div>
         </header>
