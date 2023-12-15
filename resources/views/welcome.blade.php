@@ -2,6 +2,7 @@
 
 @section('head')
 <link rel="stylesheet" href="{{asset('/css/cover.css')}}"> 
+<link rel="stylesheet" href="{{asset('/css/signin.css')}}">
 @endsection
 
 @section('content')
