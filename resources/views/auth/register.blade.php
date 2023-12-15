@@ -1,5 +1,9 @@
 @extends('layaouts.app')
 
+@section('head')
+<link rel="stylesheet" href="{{asset('/css/signin.css')}}">
+@endsection
+
 @section('content')
 <main class="form-signin">
     <form method="POST" action="{{ route('auth.register-user') }}">
