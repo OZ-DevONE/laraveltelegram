@@ -2,6 +2,9 @@
 
 @section('head')
     <style>
+        html {
+        scroll-behavior: smooth;
+        }
         body {
         font-family: 'Arial', sans-serif;
         background-color: #f4f4f4;
@@ -72,7 +75,7 @@
             <label for="image">Ссылка на изображение:</label>
             <input class="form-control" type="url" id="image" name="image">
         </div>
-        <button type="submit" class="btn btn-primary">Отправить во все чаты</button>
+        <button type="submit" class="btn btn-primary">Отправить</button>
     </form>
 
     <h2>Активные чаты</h2>
