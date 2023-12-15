@@ -24,7 +24,7 @@ class ChatController extends Controller
         $chat = TelegramGroup::findOrFail($id);
         $chat->update($request->all());
 
-        return redirect()->route('home')->with('status', 'Чат обновлен');
+        return redirect()->route('user.home')->with('status', 'Чат обновлен');
     }
 
     public function destroy($id)
@@ -32,7 +32,7 @@ class ChatController extends Controller
         $chat = TelegramGroup::findOrFail($id);
         $chat->delete();
 
-        return redirect()->route('home')->with('status', 'Чат удален');
+        return redirect()->route('user.home')->with('status', 'Чат удален');
     }
 
 }
