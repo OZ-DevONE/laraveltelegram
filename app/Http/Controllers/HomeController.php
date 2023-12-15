@@ -57,33 +57,42 @@ class HomeController extends Controller
                     case 'jpg':
                     case 'jpeg':
                     case 'png':
-                        // Отправка изображения
+                        // Отправка изображения с подписью
                         $image = InputFile::create($imageUrl, basename($imageUrl));
                         Telegram::sendPhoto([
                             'chat_id' => $chat->chat_id,
-                            'photo' => $image
+                            'photo' => $image,
+                            'caption' => $text // Добавление текста как подписи
                         ]);
                         break;
                     case 'gif':
-                        // Отправка GIF
+                        // Отправка GIF с подписью
                         $gif = InputFile::create($imageUrl, basename($imageUrl));
                         Telegram::sendAnimation([
                             'chat_id' => $chat->chat_id,
-                            'animation' => $gif
+                            'animation' => $gif,
+                            'caption' => $text // Добавление текста как подписи
                         ]);
                         break;
                     case 'mp4':
-                        // Отправка видео
+                        // Отправка видео с подписью
                         $video = InputFile::create($imageUrl, basename($imageUrl));
                         Telegram::sendVideo([
                             'chat_id' => $chat->chat_id,
-                            'video' => $video
+                            'video' => $video,
+                            'caption' => $text // Добавление текста как подписи
                         ]);
                         break;
                 }
+            } else {
+                // Отправка только текстового сообщения, если нет изображения
+                Telegram::sendMessage([
+                    'chat_id' => $chat->chat_id,
+                    'text' => $text
+                ]);
             }
-        }              
-
+        }         
+        
         return redirect()->back()->with('status', 'Сообщение отправлено во все активные чаты');
     }
     
