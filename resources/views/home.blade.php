@@ -109,6 +109,7 @@
             </div>
         </div>
     @endforeach
-    
+    <!-- Кнопка Наверх -->
+<button onclick="topFunction()" id="myBtn" title="Go to top" style="display: none; position: fixed; bottom: 20px; right: 30px; z-index: 99; font-size: 18px; border: none; outline: none; background-color: #007bff; color: white; cursor: pointer; padding: 15px; border-radius: 4px;">Наверх</button>
 </div>
 @endsection
