@@ -43,13 +43,7 @@ class HomeController extends Controller
 
         $activeChats = TelegramGroup::where('is_active', true)->get();
 
-        foreach ($activeChats as $chat) {
-            // Отправка текстового сообщения
-            Telegram::sendMessage([
-                'chat_id' => $chat->chat_id,
-                'text' => $text
-            ]);
-        
+        foreach ($activeChats as $chat) {        
             if ($imageUrl) {
                 // Определение типа медиа
                 $extension = strtolower(pathinfo($imageUrl, PATHINFO_EXTENSION));
@@ -92,7 +86,7 @@ class HomeController extends Controller
                 ]);
             }
         }         
-        
+
         return redirect()->back()->with('status', 'Сообщение отправлено во все активные чаты');
     }
     
