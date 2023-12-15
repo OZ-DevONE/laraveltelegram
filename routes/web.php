@@ -76,7 +76,7 @@ Route::post('/telegram-add', [TelegramGroupController::class, 'add'])->name('tel
 
 Route::post('/telegram-webhook', [TelegramController::class, 'webhook']);
 
-Route::get('/about-us', function () {
+Route::get('/about', function () {
     return view('about');
 })->name('about');
 
