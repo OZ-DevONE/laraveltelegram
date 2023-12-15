@@ -1,5 +1,9 @@
 @extends('layaouts.app')
 
+@section('head')
+<link rel="stylesheet" href="{{asset('/css/signin.css')}}">
+@endsection
+
 @section('content')
     <form action="{{ route('chats.update', $chat->id) }}" method="POST">
         @csrf
