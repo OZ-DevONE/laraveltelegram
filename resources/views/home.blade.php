@@ -1,5 +1,41 @@
 @extends('layaouts.app')
 
+@section('head')
+    <style>
+        body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        }
+
+        .card {
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .card:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        }
+
+        .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        }
+
+        /* Медиа-запросы для отзывчивого дизайна */
+        @media (max-width: 768px) {
+        .card-body {
+            padding: 15px;
+        }
+        }
+    </style>
+@endsection 
+
+
 @section('content')
 <main class="container">
     @if ($errors->any())
