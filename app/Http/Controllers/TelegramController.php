@@ -2,13 +2,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\TelegramGroup;
-use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TelegramController extends Controller
 {
-    protected $activityLog = [];
-
     public function webhook()
     {
         $update = Telegram::commandsHandler(true);
@@ -53,8 +50,6 @@ class TelegramController extends Controller
         if ($message && $message->getText()) {
             $chatId = $message->getChat()->getId();
             $text = $message->getText();
-            $userId = $message->getFrom()->getId();
-            $isSticker = $message->getSticker() ? true : false;
     
             if ($this->containsBadWords($text)) {
                 Telegram::deleteMessage([
@@ -68,23 +63,33 @@ class TelegramController extends Controller
                     'text' => 'В вашем сообщении обнаружен неприемлемый язык. Пожалуйста, соблюдайте правила чата.'
                 ]);
             }
-
-            $containsLink = $this->containsLink($text);
-
-            $this->updateUserActivity($userId, $chatId, $isSticker, $containsLink, $message->getMessageId());
-
-            if ($this->isUserOverActive($userId, $chatId)) {
-                $this->deleteRecentMessages($userId, $chatId);
-            }
         }
 
+        if ($message) {
+            $chatId = $message->getChat()->getId();
+            $text = $message->getText();
+
+            // Проверка на наличие ссылки
+            if ($this->containsLink($text)) {
+                Telegram::deleteMessage([
+                    'chat_id' => $chatId,
+                    'message_id' => $message->getMessageId()
+                ]);
+
+                // Опционально: отправка уведомления об удалении
+                Telegram::sendMessage([
+                    'chat_id' => $chatId,
+                    'text' => 'В вашем сообщении была обнаружена ссылка, которая была удалена.'
+                ]);
+            }
+        }
 
         return response()->json(['status' => 'success']);
     }
 
     private function containsBadWords($text)
     {
-        $badWords = ['блять', 'сука', 'хуйло', 'типа матное слово', 'хуй', 'пидорас', 'пидор', 'хуеглот', 'тварь'];
+        $badWords = ['блять', 'сука', 'хуйло', 'типа матное слово', 'хуй', 'пидорас', 'пидор', 'хуеглот', ''];
         foreach ($badWords as $word) {
             if (stripos($text, $word) !== false) {
                 return true;
@@ -92,70 +97,11 @@ class TelegramController extends Controller
         }
         return false;
     }
-
+    
     private function containsLink($text)
     {
-        return preg_match('/\bhttps?:\/\/\S+/i', $text);
+        // Регулярное выражение для определения URL
+        $regex = "/\b(?:https?:\/\/|www\.)\S+\b/i";
+        return preg_match($regex, $text);
     }
-
-    private function updateUserActivity($userId, $chatId, $isSticker, $containsLink, $messageId)
-    {
-        $currentTime = time();
-    
-        // Очищаем устаревшие записи
-        foreach ($this->activityLog as $key => $log) {
-            if ($currentTime - $log['time'] > 300) { // 300 секунд = 5 минут
-                unset($this->activityLog[$key]);
-            }
-        }
-    
-        // Добавляем новую запись
-        $this->activityLog[] = [
-            'userId' => $userId,
-            'chatId' => $chatId,
-            'isSticker' => $isSticker,
-            'containsLink' => $containsLink,
-            'messageId' => $messageId,
-            'time' => $currentTime
-        ];
-    }
-
-    private function isUserOverActive($userId, $chatId)
-    {
-        $countMessages = 0;
-        $countStickers = 0;
-        $countLinkMessages = 0;
-
-        foreach ($this->activityLog as $log) {
-            if ($log['userId'] == $userId && $log['chatId'] == $chatId) {
-                $countMessages++;
-                if ($log['isSticker']) {
-                    $countStickers++;
-                }
-                if ($log['containsLink']) {
-                    $countLinkMessages++;
-                }
-            }
-        }
-
-        // Условия для определения подозрительной активности
-        return $countMessages > 10 || $countStickers > 5 || $countLinkMessages > 3;
-    }
-
-    private function deleteRecentMessages($userId, $chatId)
-    {
-        foreach ($this->activityLog as $log) {
-            if ($log['userId'] == $userId && $log['chatId'] == $chatId && isset($log['messageId'])) {
-                try {
-                    Telegram::deleteMessage([
-                        'chat_id' => $chatId,
-                        'message_id' => $log['messageId']
-                    ]);
-                } catch (\Exception $e) {
-                    Log::error("Ошибка при удалении сообщения: " . $e->getMessage());
-                }
-            }
-        }
-    }
-    
 }
