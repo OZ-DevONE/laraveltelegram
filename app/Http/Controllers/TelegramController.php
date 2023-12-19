@@ -65,24 +65,24 @@ class TelegramController extends Controller
             }
         }
 
-        if ($message) {
-            $chatId = $message->getChat()->getId();
-            $text = $message->getText();
+        // if ($message) {
+        //     $chatId = $message->getChat()->getId();
+        //     $text = $message->getText();
 
-            // Проверка на наличие ссылки
-            if ($this->containsLink($text)) {
-                Telegram::deleteMessage([
-                    'chat_id' => $chatId,
-                    'message_id' => $message->getMessageId()
-                ]);
+        //     // Проверка на наличие ссылки
+        //     if ($this->containsLink($text)) {
+        //         Telegram::deleteMessage([
+        //             'chat_id' => $chatId,
+        //             'message_id' => $message->getMessageId()
+        //         ]);
 
-                // Опционально: отправка уведомления об удалении
-                Telegram::sendMessage([
-                    'chat_id' => $chatId,
-                    'text' => 'В вашем сообщении была обнаружена ссылка, которая была удалена.'
-                ]);
-            }
-        }
+        //         // Опционально: отправка уведомления об удалении
+        //         Telegram::sendMessage([
+        //             'chat_id' => $chatId,
+        //             'text' => 'В вашем сообщении была обнаружена ссылка, которая была удалена.'
+        //         ]);
+        //     }
+        // }
 
         return response()->json(['status' => 'success']);
     }
