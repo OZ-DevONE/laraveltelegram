@@ -100,8 +100,7 @@ class TelegramController extends Controller
     
     private function containsLink($text)
     {
-        // Регулярное выражение для определения URL
-        $regex = "/\b(?:https?:\/\/|www\.)\S+\b/i";
+        $regex = "/\b(?:https?:\/\/)?[a-z0-9-]+(\.[a-z]{2,})+\b/i";
         return preg_match($regex, $text);
     }
 }
