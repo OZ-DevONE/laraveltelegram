@@ -89,7 +89,7 @@ class TelegramController extends Controller
 
     private function containsBadWords($text)
     {
-        $badWords = ['блять', 'сука', 'хуйло', 'типа матное слово', 'хуй', 'пидорас', 'пидор', 'хуеглот', ''];
+        $badWords = ['блять', 'сука', 'хуйло', 'типа матное слово', 'хуй', 'пидорас', 'пидор', 'хуеглот', 'лох'];
         foreach ($badWords as $word) {
             if (stripos($text, $word) !== false) {
                 return true;
