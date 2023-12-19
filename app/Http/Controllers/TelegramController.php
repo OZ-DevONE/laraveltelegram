@@ -53,6 +53,8 @@ class TelegramController extends Controller
         if ($message && $message->getText()) {
             $chatId = $message->getChat()->getId();
             $text = $message->getText();
+            $userId = $message->getFrom()->getId();
+            $isSticker = $message->getSticker() ? true : false;
     
             if ($this->containsBadWords($text)) {
                 Telegram::deleteMessage([
@@ -66,13 +68,7 @@ class TelegramController extends Controller
                     'text' => 'В вашем сообщении обнаружен неприемлемый язык. Пожалуйста, соблюдайте правила чата.'
                 ]);
             }
-        }
 
-        if ($message) {
-            $chatId = $message->getChat()->getId();
-            $userId = $message->getFrom()->getId();
-            $text = $message->getText();
-            $isSticker = $message->getSticker() ? true : false;
             $containsLink = $this->containsLink($text);
 
             $this->updateUserActivity($userId, $chatId, $isSticker, $containsLink, $message->getMessageId());
@@ -81,6 +77,7 @@ class TelegramController extends Controller
                 $this->deleteRecentMessages($userId, $chatId);
             }
         }
+
 
         return response()->json(['status' => 'success']);
     }
@@ -101,7 +98,7 @@ class TelegramController extends Controller
         return preg_match('/\bhttps?:\/\/\S+/i', $text);
     }
 
-    private function updateUserActivity($userId, $chatId, $isSticker, $containsLink)
+    private function updateUserActivity($userId, $chatId, $isSticker, $containsLink, $messageId)
     {
         $currentTime = time();
     
@@ -118,7 +115,7 @@ class TelegramController extends Controller
             'chatId' => $chatId,
             'isSticker' => $isSticker,
             'containsLink' => $containsLink,
-            // 'messageId' => $messageId,
+            'messageId' => $messageId,
             'time' => $currentTime
         ];
     }
