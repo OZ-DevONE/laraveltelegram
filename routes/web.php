@@ -6,7 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TelegramGroupController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Telegram\Bot\Laravel\Facades\Telegram;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\ChatController;
 
@@ -84,4 +84,11 @@ Route::delete('/chats/{id}', [ChatController::class, 'destroy'])->name('chats.de
 
 Route::get('/sitemap', function () {
     return view('karta');
+});
+
+
+// Маршруты для админа
+Route::prefix('admin')->name('admin.')->middleware('admin')->group(function() {
+    Route::get('/', [AdminController::class, 'index'])->name('index');
+    Route::delete('/users/{user}', [AdminController::class, 'destroy'])->name('users.destroy');
 });
