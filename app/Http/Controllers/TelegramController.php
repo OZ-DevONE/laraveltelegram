@@ -8,85 +8,90 @@ class TelegramController extends Controller
 {
     public function webhook()
     {
-        $update = Telegram::commandsHandler(true);
+        try {
+            $update = Telegram::commandsHandler(true);
 
-        // Проверяем, есть ли информация о новом участнике чата
-        $newMember = $update->getMessage()->getNewChatMembers();
+            $newMember = $update->getMessage()->getNewChatMembers();
+            if ($newMember) {
+                $this->handleNewChatMembers($newMember, $update);
+            }
+
+            $message = $update->getMessage();
+            if ($message && $message->getText()) {
+                $this->handleMessage($message);
+            }
+
+            return response()->json(['status' => 'success']);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+    }
+
+    private function handleNewChatMembers($newMembers, $update)
+    {
         $botId = config('services.telegram.bot_id');
-        if ($newMember) {
-            foreach ($newMember as $member) {
-                // Проверяем, является ли новый участник нашим ботом
-                if ($member->getId() == $botId) {
-                    $chatId = $update->getMessage()->getChat()->getId();
-
-                    $chat = TelegramGroup::where('chat_id', $chatId)->first();
-                    
-                    if ($chat) {
-                        // Обновляем статус чата в базе данных
-                        $chat->update(['is_active' => true]);
-    
-                        // Отправляем сообщение о подключении бота
-                        Telegram::sendMessage([
-                            'chat_id' => $chatId,
-                            'text' => 'Бот подключен и готов к работе!'
-                        ]);
-                    }else {
-                        // Отправляем сообщение о том, что бот не будет работать в этом чате
-                        Telegram::sendMessage([
-                            'chat_id' => $chatId,
-                            'text' => 'Бот не может работать в этом чате или группе, так как он не зарегистрирован в системе.'
-                        ]);
-    
-                        // Отправляем команду на выход бота из чата
-                        Telegram::leaveChat([
-                            'chat_id' => $chatId
-                        ]);
-                    }
+        foreach ($newMembers as $member) {
+            if ($member->getId() == $botId) {
+                $chatId = $update->getMessage()->getChat()->getId();
+                $chat = TelegramGroup::where('chat_id', $chatId)->first();
+                
+                if ($chat) {
+                    $chat->update(['is_active' => true]);
+                    Telegram::sendMessage([
+                        'chat_id' => $chatId,
+                        'text' => 'Бот подключен и готов к работе!'
+                    ]);
+                } else {
+                    Telegram::sendMessage([
+                        'chat_id' => $chatId,
+                        'text' => 'Бот не может работать в этом чате.'
+                    ]);
+                    Telegram::leaveChat(['chat_id' => $chatId]);
                 }
             }
         }
-
-        $message = $update->getMessage();
-        if ($message && $message->getText()) {
-            $chatId = $message->getChat()->getId();
-            $text = $message->getText();
-    
-            if ($this->containsBadWords($text)) {
-                Telegram::deleteMessage([
-                    'chat_id' => $chatId,
-                    'message_id' => $message->getMessageId()
-                ]);
-    
-                // Отправка предупреждения
-                Telegram::sendMessage([
-                    'chat_id' => $chatId,
-                    'text' => 'В вашем сообщении обнаружен неприемлемый язык. Пожалуйста, соблюдайте правила чата.'
-                ]);
-            }
-        }
-
-        // if ($message) {
-        //     $chatId = $message->getChat()->getId();
-        //     $text = $message->getText();
-
-        //     // Проверка на наличие ссылки
-        //     if ($this->containsLink($text)) {
-        //         Telegram::deleteMessage([
-        //             'chat_id' => $chatId,
-        //             'message_id' => $message->getMessageId()
-        //         ]);
-
-        //         // Опционально: отправка уведомления об удалении
-        //         Telegram::sendMessage([
-        //             'chat_id' => $chatId,
-        //             'text' => 'В вашем сообщении была обнаружена ссылка, которая была удалена.'
-        //         ]);
-        //     }
-        // }
-
-        return response()->json(['status' => 'success']);
     }
 
+    private function handleMessage($message)
+    {
+        $chatId = $message->getChat()->getId();
+        $text = $message->getText();
+
+        if ($this->containsBadWords($text)) {
+            $this->deleteMessageAndWarnUser($chatId, $message);
+        }
+
+        if ($this->containsLink($text)) {
+            $this->deleteMessageWithLink($chatId, $message);
+        }
+    }
+
+    private function deleteMessageAndWarnUser($chatId, $message)
+    {
+        Telegram::deleteMessage([
+            'chat_id' => $chatId,
+            'message_id' => $message->getMessageId()
+        ]);
+
+        Telegram::sendMessage([
+            'chat_id' => $chatId,
+            'text' => 'Неприемлемый язык удален.'
+        ]);
+    }
+
+    private function deleteMessageWithLink($chatId, $message)
+    {
+        Telegram::deleteMessage([
+            'chat_id' => $chatId,
+            'message_id' => $message->getMessageId()
+        ]);
+
+        Telegram::sendMessage([
+            'chat_id' => $chatId,
+            'text' => 'Ссылка в сообщении была удалена.'
+        ]);
+    }
+    
     private function containsBadWords($text)
     {
         $badWords = ['блять', 'сука', 'хуйло', 'типа матное слово', 'хуй', 'пидорас', 'пидор', 'хуеглот', 'лох'];
