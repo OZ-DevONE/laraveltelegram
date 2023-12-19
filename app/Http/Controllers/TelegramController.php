@@ -101,7 +101,7 @@ class TelegramController extends Controller
         return preg_match('/\bhttps?:\/\/\S+/i', $text);
     }
 
-    private function updateUserActivity($userId, $chatId, $isSticker, $containsLink, $messageId)
+    private function updateUserActivity($userId, $chatId, $isSticker, $containsLink)
     {
         $currentTime = time();
     
@@ -118,7 +118,7 @@ class TelegramController extends Controller
             'chatId' => $chatId,
             'isSticker' => $isSticker,
             'containsLink' => $containsLink,
-            'messageId' => $messageId,
+            // 'messageId' => $messageId,
             'time' => $currentTime
         ];
     }
