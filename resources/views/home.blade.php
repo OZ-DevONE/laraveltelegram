@@ -78,7 +78,7 @@
         <button type="submit" class="btn btn-primary">Отправить</button>
     </form>
 
-    <h2>Активные чаты/группы</h2>
+    <h2>Активные чаты</h2>
     @foreach ($activeChats as $chat)
         <div class="card mb-3">
             <div class="card-body">
@@ -95,13 +95,13 @@
     @endforeach
     {{ $activeChats->links() }}
     
-    <h2>Неактивные чаты/группы</h2>
+    <h2>Неактивные чаты</h2>
     @foreach ($inactiveChats as $chat)
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">{{ $chat->telegram_username }}</h5>
                 <p class="card-text">{{ $chat->chat_id }}</p>
-                <p>Чтобы активировать, добавьте бота в этот чат или группу.</p>
+                <p>Чтобы активировать, добавьте бота: <a href="https://t.me/laravelingormer_bot">laravelingormer_bot</a> в этот чат</p>
                 <a href="{{ route('chats.edit', $chat->id) }}" class="btn btn-primary">Редактировать</a>
                 <form action="{{ route('chats.destroy', $chat->id) }}" method="POST" style="display:inline;">
                     @csrf
