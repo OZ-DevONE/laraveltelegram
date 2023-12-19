@@ -93,6 +93,7 @@
             </div>
         </div>
     @endforeach
+    {{ $activeChats->links() }}
     
     <h2>Неактивные чаты/группы</h2>
     @foreach ($inactiveChats as $chat)
@@ -110,5 +111,6 @@
             </div>
         </div>
     @endforeach
+    {{ $inactiveChats->links() }}
 </div>
 @endsection

@@ -14,18 +14,17 @@ class HomeController extends Controller
     {
         $userId = auth()->user()->id; // Получение ID текущего пользователя из auth
     
-        //Дай мне данные именно этого пользователя а именно его активные чаты
         $activeChats = TelegramGroup::where('user_id', $userId)
                                     ->where('is_active', true)
-                                    ->get();
+                                    ->paginate(5); 
         
-        //Дай мне данные именно этого пользователя а именно его не активные чаты
         $inactiveChats = TelegramGroup::where('user_id', $userId)
                                       ->where('is_active', false)
-                                      ->get();
+                                      ->paginate(5);
     
         return view('home', ['activeChats' => $activeChats, 'inactiveChats' => $inactiveChats]);
     }
+    
     
 
     public function sendToAllChats(Request $request)
