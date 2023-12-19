@@ -71,12 +71,15 @@ Route::controller(AuthUser::class)->name('auth.')->group(function(){
 //Добавление чата/группы
 Route::post('/telegram-add', [TelegramGroupController::class, 'add'])->name('telegram.add');
 
+//web hook для тг
 Route::post('/telegram-webhook', [TelegramController::class, 'webhook']);
 
+//Страница о нас
 Route::get('/about', function () {
     return view('about');
 })->name('about');
 
+//Для редактирования чатов
 Route::get('/chats/{id}/edit', [ChatController::class, 'edit'])->name('chats.edit');
 Route::put('/chats/{id}', [ChatController::class, 'update'])->name('chats.update');
 Route::delete('/chats/{id}', [ChatController::class, 'destroy'])->name('chats.destroy');

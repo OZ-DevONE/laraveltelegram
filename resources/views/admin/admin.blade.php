@@ -3,6 +3,11 @@
 @section('content')
 <div class="container">
     <h1>Административная панель</h1>
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
     <h2>Список пользователей</h2>
     <table class="table">
         <thead>

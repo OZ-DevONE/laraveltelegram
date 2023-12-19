@@ -18,11 +18,31 @@ class TelegramController extends Controller
             foreach ($newMember as $member) {
                 // Проверяем, является ли новый участник нашим ботом
                 if ($member->getId() == $botId) {
-                    // Отправляем сообщение в чат
-                    Telegram::sendMessage([
-                        'chat_id' => $update->getMessage()->getChat()->getId(),
-                        'text' => 'Подключен'
-                    ]);
+                    $chatId = $update->getMessage()->getChat()->getId();
+
+                    $chat = TelegramGroup::where('chat_id', $chatId)->first();
+                    
+                    if ($chat) {
+                        // Обновляем статус чата в базе данных
+                        $chat->update(['is_active' => true]);
+    
+                        // Отправляем сообщение о подключении бота
+                        Telegram::sendMessage([
+                            'chat_id' => $chatId,
+                            'text' => 'Бот подключен и готов к работе!'
+                        ]);
+                    }else {
+                        // Отправляем сообщение о том, что бот не будет работать в этом чате
+                        Telegram::sendMessage([
+                            'chat_id' => $chatId,
+                            'text' => 'Бот не может работать в этом чате или группе, так как он не зарегистрирован в системе.'
+                        ]);
+    
+                        // Отправляем команду на выход бота из чата
+                        Telegram::leaveChat([
+                            'chat_id' => $chatId
+                        ]);
+                    }
                 }
             }
         }

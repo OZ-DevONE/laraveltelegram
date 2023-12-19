@@ -78,7 +78,7 @@
         <button type="submit" class="btn btn-primary">Отправить</button>
     </form>
 
-    <h2>Активные чаты</h2>
+    <h2>Активные чаты/группы</h2>
     @foreach ($activeChats as $chat)
         <div class="card mb-3">
             <div class="card-body">
@@ -94,12 +94,13 @@
         </div>
     @endforeach
     
-    <h2>Неактивные чаты</h2>
+    <h2>Неактивные чаты/группы</h2>
     @foreach ($inactiveChats as $chat)
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">{{ $chat->telegram_username }}</h5>
                 <p class="card-text">{{ $chat->chat_id }}</p>
+                <p>Чтобы активировать, добавьте бота в этот чат или группу.</p>
                 <a href="{{ route('chats.edit', $chat->id) }}" class="btn btn-primary">Редактировать</a>
                 <form action="{{ route('chats.destroy', $chat->id) }}" method="POST" style="display:inline;">
                     @csrf
@@ -109,7 +110,5 @@
             </div>
         </div>
     @endforeach
-    <!-- Кнопка Наверх -->
-<button onclick="topFunction()" id="myBtn" title="Go to top" style="display: none; position: fixed; bottom: 20px; right: 30px; z-index: 99; font-size: 18px; border: none; outline: none; background-color: #007bff; color: white; cursor: pointer; padding: 15px; border-radius: 4px;">Наверх</button>
 </div>
 @endsection
