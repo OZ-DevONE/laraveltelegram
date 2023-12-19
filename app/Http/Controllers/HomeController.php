@@ -12,11 +12,21 @@ class HomeController extends Controller
 {
     public function home()
     {
-        $activeChats = TelegramGroup::where('is_active', true)->get();
-        $inactiveChats = TelegramGroup::where('is_active', false)->get();
+        $userId = auth()->user()->id; // Получение ID текущего пользователя из auth
+    
+        //Дай мне данные именно этого пользователя а именно его активные чаты
+        $activeChats = TelegramGroup::where('user_id', $userId)
+                                    ->where('is_active', true)
+                                    ->get();
+        
+        //Дай мне данные именно этого пользователя а именно его не активные чаты
+        $inactiveChats = TelegramGroup::where('user_id', $userId)
+                                      ->where('is_active', false)
+                                      ->get();
     
         return view('home', ['activeChats' => $activeChats, 'inactiveChats' => $inactiveChats]);
     }
+    
 
     public function sendToAllChats(Request $request)
     {
@@ -38,14 +48,17 @@ class HomeController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $text = $request->input('text');
+        $text = $request->input('text'); // text Текст
         $imageUrl = $request->input('image'); // URL изображения
 
-        $activeChats = TelegramGroup::where('is_active', true)->get();
+        $userId = auth()->user()->id; // Получение ID текущего пользователя из auth
+        $activeChats = TelegramGroup::where('user_id', $userId)
+                                    ->where('is_active', true)
+                                    ->get();
 
-        foreach ($activeChats as $chat) {        
+        foreach ($activeChats as $chat) {    
+            //Есть ссылка?    
             if ($imageUrl) {
-                // Определение типа медиа
                 $extension = strtolower(pathinfo($imageUrl, PATHINFO_EXTENSION));
                 switch ($extension) {
                     case 'jpg':
@@ -54,32 +67,32 @@ class HomeController extends Controller
                         // Отправка изображения с подписью
                         $image = InputFile::create($imageUrl, basename($imageUrl));
                         Telegram::sendPhoto([
-                            'chat_id' => $chat->chat_id,
-                            'photo' => $image,
-                            'caption' => $text // Добавление текста как подписи
+                            'chat_id' => $chat->chat_id, // его чат id
+                            'photo' => $image, // Тут фото
+                            'caption' => $text // Тут текст
                         ]);
                         break;
                     case 'gif':
                         // Отправка GIF с подписью
                         $gif = InputFile::create($imageUrl, basename($imageUrl));
                         Telegram::sendAnimation([
-                            'chat_id' => $chat->chat_id,
-                            'animation' => $gif,
-                            'caption' => $text // Добавление текста как подписи
+                            'chat_id' => $chat->chat_id, // его чат id
+                            'animation' => $gif, // Тут гиф
+                            'caption' => $text // Тут текст
                         ]);
                         break;
                     case 'mp4':
                         // Отправка видео с подписью
                         $video = InputFile::create($imageUrl, basename($imageUrl));
                         Telegram::sendVideo([
-                            'chat_id' => $chat->chat_id,
-                            'video' => $video,
-                            'caption' => $text // Добавление текста как подписи
+                            'chat_id' => $chat->chat_id, // его чат id
+                            'video' => $video, // Тут видео
+                            'caption' => $text // Тут текст
                         ]);
                         break;
                 }
             } else {
-                // Отправка только текстового сообщения, если нет изображения
+                // Отправка только текстового сообщения, если нет изображения а именно нету ссылки
                 Telegram::sendMessage([
                     'chat_id' => $chat->chat_id,
                     'text' => $text

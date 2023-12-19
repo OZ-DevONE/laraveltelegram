@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('telegram_groups', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id'); // ID пользователя в вашей системе
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('telegram_username');
             $table->string('chat_url');
-            $table->boolean('is_active')->default(false); // Статус активности группы
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });        
     }
