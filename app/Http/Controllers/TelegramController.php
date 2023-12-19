@@ -78,32 +78,5 @@ class TelegramController extends Controller
         }
         return false;
     }
-
-    // public function checkBotAdminStatus()
-    // {
-    //     $telegramGroups = TelegramGroup::all(); // Получаем все группы
-    //     $botId = config('services.telegram.bot_id');
-    //     foreach ($telegramGroups as $group) {
-    //         // Получаем информацию о члене группы (боте)
-    //         $response = Telegram::getChatMember([
-    //             'chat_id' => $group->chat_id,
-    //             'user_id' => $botId,
-    //         ]);
-    
-    //         // Проверяем, является ли бот администратором
-    //         if ($response->getStatus() === 'administrator') {
-    //             $group->is_active = true;
-    //         } else {
-    //             $group->is_active = false;
-    //         }
-    //         $group->save();
-    //     }
-    //     // После обновления статусов, получаем актуальные данные
-    //     $activeChats = TelegramGroup::where('is_active', true)->get();
-    //     $inactiveChats = TelegramGroup::where('is_active', false)->get();
-
-    //     // Передаем данные в представление
-    //     return view('home', ['groups' => $telegramGroups, 'activeChats' => $activeChats, 'inactiveChats' => $inactiveChats]);
-    // }
     
 }
