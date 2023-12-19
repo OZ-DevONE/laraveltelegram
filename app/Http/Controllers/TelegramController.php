@@ -100,7 +100,7 @@ class TelegramController extends Controller
     
     private function containsLink($text)
     {
-        $regex = "/https?:\/\/[a-z0-9-]+(\.[a-z]{2,})+(\.[a-z]{2,}|\/|[^ \n])*$/i";
+        $regex = "/https?:\/\/[a-z0-9-]+(\.[a-z]{2,})+[^ \n]*/i";
         return preg_match($regex, $text);
     }
 }
