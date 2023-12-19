@@ -83,3 +83,8 @@ Route::get('/about', function () {
 Route::get('/chats/{id}/edit', [ChatController::class, 'edit'])->name('chats.edit');
 Route::put('/chats/{id}', [ChatController::class, 'update'])->name('chats.update');
 Route::delete('/chats/{id}', [ChatController::class, 'destroy'])->name('chats.destroy');
+
+
+Route::get('/sitemap', function () {
+    return view('karta');
+});
