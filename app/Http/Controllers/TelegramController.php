@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TelegramGroup;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TelegramController extends Controller
@@ -74,7 +75,7 @@ class TelegramController extends Controller
             $isSticker = $message->getSticker() ? true : false;
             $containsLink = $this->containsLink($text);
 
-            $this->updateUserActivity($userId, $chatId, $isSticker, $containsLink);
+            $this->updateUserActivity($userId, $chatId, $isSticker, $containsLink, $message->getMessageId());
 
             if ($this->isUserOverActive($userId, $chatId)) {
                 $this->deleteRecentMessages($userId, $chatId);
@@ -100,23 +101,24 @@ class TelegramController extends Controller
         return preg_match('/\bhttps?:\/\/\S+/i', $text);
     }
 
-    private function updateUserActivity($userId, $chatId, $isSticker, $containsLink)
+    private function updateUserActivity($userId, $chatId, $isSticker, $containsLink, $messageId)
     {
         $currentTime = time();
-
+    
         // Очищаем устаревшие записи
         foreach ($this->activityLog as $key => $log) {
             if ($currentTime - $log['time'] > 300) { // 300 секунд = 5 минут
                 unset($this->activityLog[$key]);
             }
         }
-
+    
         // Добавляем новую запись
         $this->activityLog[] = [
             'userId' => $userId,
             'chatId' => $chatId,
             'isSticker' => $isSticker,
             'containsLink' => $containsLink,
+            'messageId' => $messageId,
             'time' => $currentTime
         ];
     }
@@ -146,11 +148,15 @@ class TelegramController extends Controller
     private function deleteRecentMessages($userId, $chatId)
     {
         foreach ($this->activityLog as $log) {
-            if ($log['userId'] == $userId && $log['chatId'] == $chatId) {
-                Telegram::deleteMessage([
-                    'chat_id' => $chatId,
-                    'message_id' => $log['messageId']
-                ]);
+            if ($log['userId'] == $userId && $log['chatId'] == $chatId && isset($log['messageId'])) {
+                try {
+                    Telegram::deleteMessage([
+                        'chat_id' => $chatId,
+                        'message_id' => $log['messageId']
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error("Ошибка при удалении сообщения: " . $e->getMessage());
+                }
             }
         }
     }
