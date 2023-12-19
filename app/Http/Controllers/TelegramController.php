@@ -2,12 +2,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\TelegramGroup;
-use Illuminate\Http\Request;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TelegramController extends Controller
 {
-    public function webhook(Request $request)
+    public function webhook()
     {
         $update = Telegram::commandsHandler(true);
 
@@ -47,7 +46,37 @@ class TelegramController extends Controller
             }
         }
 
+        $message = $update->getMessage();
+        if ($message && $message->getText()) {
+            $chatId = $message->getChat()->getId();
+            $text = $message->getText();
+    
+            if ($this->containsBadWords($text)) {
+                Telegram::deleteMessage([
+                    'chat_id' => $chatId,
+                    'message_id' => $message->getMessageId()
+                ]);
+    
+                // Отправка предупреждения
+                Telegram::sendMessage([
+                    'chat_id' => $chatId,
+                    'text' => 'В вашем сообщении обнаружен неприемлемый язык. Пожалуйста, соблюдайте правила чата.'
+                ]);
+            }
+        }
+
         return response()->json(['status' => 'success']);
+    }
+
+    private function containsBadWords($text)
+    {
+        $badWords = ['блять', 'сука', 'хуйло', 'типа матное слово'];
+        foreach ($badWords as $word) {
+            if (stripos($text, $word) !== false) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // public function checkBotAdminStatus()

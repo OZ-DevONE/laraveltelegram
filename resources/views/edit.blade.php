@@ -18,14 +18,6 @@
                     <input type="text" class="form-control" id="chatId" name="chat_id" value="{{ $chat->chat_id }}" required>
                 </div>
 
-                <div class="mb-3">
-                    <label for="isActive" class="form-label">Активен</label>
-                    <select class="form-control" id="isActive" name="is_active">
-                        <option value="1" {{ $chat->is_active ? 'selected' : '' }}>Да</option>
-                        <option value="0" {{ !$chat->is_active ? 'selected' : '' }}>Нет</option>
-                    </select>
-                </div>
-
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">Сохранить изменения</button>
                 </div>

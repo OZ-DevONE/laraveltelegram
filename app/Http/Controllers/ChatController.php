@@ -18,7 +18,6 @@ class ChatController extends Controller
         $request->validate([
             'telegram_username' => 'required|max:255',
             'chat_id' => 'required|max:255',
-            'is_active' => 'required|boolean'
         ]);
 
         $chat = TelegramGroup::findOrFail($id);
