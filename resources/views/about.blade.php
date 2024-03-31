@@ -1,66 +1,45 @@
 {{-- Файл resources/views/about.blade.php --}}
 
-@extends('layaouts.app')
+@extends('layouts.app')
 
-@section('content')
-    <div class="container my-5">
-        <h1 class="text-center">О нас</h1>
-        <p class="text-justify">
-            Добро пожаловать на страницу "О нас"! Здесь вы можете узнать больше о нашей компании, миссии, истории и людях, которые делают нашу компанию уникальной. Мы гордимся тем, что предоставляем качественные услуги нашим клиентам уже более десяти лет.
-        </p>
-        
-        
-        <section id="team">
-            <h2 class="text-center">Наша команда</h2>
-            <p>Наши сотрудники - это сердце нашего бизнеса. Ознакомьтесь с профессионалами, которые вносят свой вклад в наш успех каждый день.</p>
-            
-            {{-- Один ряд для всех карточек --}}
-            <div class="row">
-                {{-- Первая карточка --}}
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="https://gas-kvas.com/grafic/uploads/posts/2023-09/1695835364_gas-kvas-com-p-kartinki-kapibara-1.jpg" alt="Имя Сотрудника" class="card-img-top">
-                        <div class="card-body">
-                            <h5 class="card-title">Капибара 1</h5>
-                            <p class="card-text">Какиш</p>
-                        </div>
-                    </div>
-                </div>
-                
-                {{-- Вторая карточка --}}
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="https://petstime.ru/wp-content/uploads/2023/04/word-image-13637-8.jpeg" alt="Имя Сотрудника" class="card-img-top">
-                        <div class="card-body">
-                            <h5 class="card-title">Капибара 2</h5>
-                            <p class="card-text">Какиш</p>
-                        </div>
-                    </div>
-                </div>
-                
-                {{-- Третья карточка --}}
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="https://petstime.ru/wp-content/uploads/2023/04/word-image-13637-5.jpeg" alt="Имя Сотрудника" class="card-img-top">
-                        <div class="card-body">
-                            <h5 class="card-title">Капибара 3</h5>
-                            <p class="card-text">Какиш</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        
-        <section id="values">
-            <h2 class="text-center">Наши ценности</h2>
-            <p>Мы стремимся к созданию доверительных отношений с нашими клиентами и партнерами. Наши ключевые ценности включают честность, прозрачность и стремление к инновациям.</p>
-        </section>
-        
-        <section id="history">
-            <h2 class="text-center">Наша история</h2>
-            <p>С момента основания в 2010 году, наша компания постоянно росла и развивалась. От маленькой стартап-команды до ведущего игрока на рынке.</p>
-        </section>
-    </div>
+@section('head')
+<link rel="stylesheet" href="{{ asset('/css/cover.css') }}"> 
+<link rel="stylesheet" href="{{ asset('/css/signin.css') }}">
 @endsection
 
+@section('content')
+<div class="container my-5 text-center text-lg-start">
+    <h1 class="text-uppercase mb-4">О нас</h1>
+    <p class="lead">
+        Наша компания посвящена инновациям в области цифровой безопасности и администрирования социальных сетей. С момента нашего основания более десяти лет назад, мы стремились предоставлять услуги, превосходящие ожидания наших клиентов, используя передовые технологии и уникальные методологии.
+    </p>
+    
+    <section id="mission" class="my-5">
+        <h2 class="text-uppercase mb-3">Наша миссия</h2>
+        <p class="lead">
+            Мы стремимся создавать надежные и эффективные решения для администрирования и защиты цифровых данных. Наша цель - обеспечить клиентам максимальную безопасность и удобство управления их онлайн-присутствием.
+        </p>
+    </section>
+    
+    <section id="team" class="my-5">
+        <h2 class="text-uppercase mb-3">Наша команда</h2>
+        <p class="lead">
+            В основе нашего успеха лежит команда высококвалифицированных профессионалов, чья работа вдохновляется желанием инноваций и постоянного развития. Мы ценим каждого члена нашей команды и стремимся к созданию среды, где каждый может внести свой уникальный вклад.
+        </p>
+    </section>
+    
+    <section id="values" class="my-5">
+        <h2 class="text-uppercase mb-3">Наши ценности</h2>
+        <p class="lead">
+            Честность, прозрачность и стремление к инновациям являются ключевыми столпами нашей корпоративной культуры. Мы верим, что доверие и открытость способствуют созданию долгосрочных отношений с нашими клиентами и партнерами.
+        </p>
+    </section>
+    
+    <section id="history" class="my-5">
+        <h2 class="text-uppercase mb-3">Наша история</h2>
+        <p class="lead">
+            С момента нашего основания в 2010 году, мы превратились из маленького стартапа в ведущего поставщика решений в области цифровой безопасности. Наш путь отражает нашу приверженность инновациям и постоянному совершенствованию.
+        </p>
+    </section>
+</div>
+@endsection
