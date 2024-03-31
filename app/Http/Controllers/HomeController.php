@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TelegramGroup;
+use App\Models\UserSetting;
 use Illuminate\Http\Request;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\FileUpload\InputFile;
@@ -13,8 +14,8 @@ class HomeController extends Controller
     public function home()
     {
         $userId = auth()->user()->id; // Получение ID текущего пользователя из auth
-
-        // из модели TelegramGroup из разрешенных полей выдай мне данные пользователя а именно user_id и is_active с использованием пагинации
+    
+        // Получение активных и неактивных чатов пользователя с пагинацией
         $activeChats = TelegramGroup::where('user_id', $userId)
                                     ->where('is_active', true)
                                     ->paginate(5); 
@@ -22,90 +23,106 @@ class HomeController extends Controller
         $inactiveChats = TelegramGroup::where('user_id', $userId)
                                       ->where('is_active', false)
                                       ->paginate(5);
-
-        // верни вью на home и задай activeChats inactiveChats
-        return view('home', ['activeChats' => $activeChats, 'inactiveChats' => $inactiveChats]);
+    
+        // Получение настроек пользователя для каждого активного чата
+        $userSettings = UserSetting::where('user_id', $userId)->get()->keyBy('chat_id');
+    
+        // Возврат в представление home со списком активных и неактивных чатов, а также настройками пользователя
+        return view('home', [
+            'activeChats' => $activeChats, 
+            'inactiveChats' => $inactiveChats,
+            'userSettings' => $userSettings
+        ]);
     }
+    
     
     // Рассылка сообщений 
     public function sendToAllChats(Request $request)
     {
-        // полученные данные проверь на валидацию
         $validator = Validator::make($request->all(), [
-            'text' => [
-                'required', 
-                'string', 
-                'max:255'
-            ],
-            'image' => [
-                'nullable', 
-                'url', 
-                'regex:/\.(jpeg|jpg|png|gif|mp4)$/i'
-            ], 
-        ]);        
-    
-        // Проверка на ошибки валидации
+            'text' => 'required|string|max:255',
+            'image' => 'nullable|url|regex:/\.(jpeg|jpg|png|gif|mp4)$/i',
+            'chat_id' => 'required|exists:telegram_groups,id'
+        ]);
+
         if ($validator->fails()) {
-            // верни назад с ошибко валидации и также сохрани введенные данные пользователя
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $text = $request->input('text'); // text Текст
-        $imageUrl = $request->input('image'); // URL изображения
+        $text = $request->input('text');
+        $imageUrl = $request->input('image');
+        $chatId = $request->input('chat_id');
 
-        $userId = auth()->user()->id; // Получение ID текущего пользователя из auth
+        // Отправка сообщения в выбранный чат
+        $this->sendMessageToChat($chatId, $text, $imageUrl);
 
-        // из модели достань данные об активных чатах пользователя который авторизирован
-        $activeChats = TelegramGroup::where('user_id', $userId)
-                                    ->where('is_active', true)
-                                    ->get();
-
-        // для каждого полученного активного чата мы делаем
-        foreach ($activeChats as $chat) {    
-            //Есть ссылка?    
-            if ($imageUrl) {
-                $extension = strtolower(pathinfo($imageUrl, PATHINFO_EXTENSION));
-                switch ($extension) {
-                    case 'jpg':
-                    case 'jpeg':
-                    case 'png':
-                        // Отправка изображения с подписью
-                        $image = InputFile::create($imageUrl, basename($imageUrl));
-                        Telegram::sendPhoto([
-                            'chat_id' => $chat->chat_id, // его чат id
-                            'photo' => $image, // Тут фото
-                            'caption' => $text // Тут текст
-                        ]);
-                        break;
-                    case 'gif':
-                        // Отправка GIF с подписью
-                        $gif = InputFile::create($imageUrl, basename($imageUrl));
-                        Telegram::sendAnimation([
-                            'chat_id' => $chat->chat_id, // его чат id
-                            'animation' => $gif, // Тут гиф
-                            'caption' => $text // Тут текст
-                        ]);
-                        break;
-                    case 'mp4':
-                        // Отправка видео с подписью
-                        $video = InputFile::create($imageUrl, basename($imageUrl));
-                        Telegram::sendVideo([
-                            'chat_id' => $chat->chat_id, // его чат id
-                            'video' => $video, // Тут видео
-                            'caption' => $text // Тут текст
-                        ]);
-                        break;
-                }
-            } else {
-                // Отправка только текстового сообщения, если нет изображения а именно нету ссылки
-                Telegram::sendMessage([
-                    'chat_id' => $chat->chat_id,
-                    'text' => $text
-                ]);
-            }
-        }         
-
-        return redirect()->back()->with('status', 'Сообщение отправлено во все активные чаты');
+        return redirect()->back()->with('status', 'Сообщение отправлено в выбранный чат.');
     }
+
+    protected function sendMessageToChat($chatId, $text, $imageUrl)
+    {
+        if ($imageUrl) {
+            $extension = strtolower(pathinfo($imageUrl, PATHINFO_EXTENSION));
+            switch ($extension) {
+                case 'jpg':
+                case 'jpeg':
+                case 'png':
+                    Telegram::sendPhoto([
+                        'chat_id' => $chatId,
+                        'photo' => InputFile::create($imageUrl, basename($imageUrl)),
+                        'caption' => $text
+                    ]);
+                    break;
+                case 'gif':
+                    Telegram::sendAnimation([
+                        'chat_id' => $chatId,
+                        'animation' => InputFile::create($imageUrl, basename($imageUrl)),
+                        'caption' => $text
+                    ]);
+                    break;
+                case 'mp4':
+                    Telegram::sendVideo([
+                        'chat_id' => $chatId,
+                        'video' => InputFile::create($imageUrl, basename($imageUrl)),
+                        'caption' => $text
+                    ]);
+                    break;
+            }
+        } else {
+            Telegram::sendMessage([
+                'chat_id' => $chatId,
+                'text' => $text
+            ]);
+        }
+    }
+
+    public function updateUserSettings(Request $request)
+    {
+        $request->validate([
+            'chat_id' => 'required|exists:telegram_groups,id',
+            'bad_words_list' => 'nullable|string',
+            'is_feature_active' => 'nullable|boolean'
+        ]);
+    
+        $userId = auth()->user()->id;
+        $chatId = $request->input('chat_id');
+        $badWordsList = $request->input('bad_words_list') ? explode(' ', $request->input('bad_words_list')) : []; // Преобразуем строку в массив, разделяя слова по пробелу
+        $isFeatureActive = $request->has('is_feature_active');
+    
+        // Находим или создаем запись в модели UserSetting для данного пользователя и чата
+        $userSetting = UserSetting::updateOrCreate(
+            [
+                'user_id' => $userId,
+                'chat_id' => $chatId
+            ],
+            [
+                'bad_words_list' => $badWordsList,
+                'is_feature_active' => $isFeatureActive
+            ]
+        );
+    
+        return redirect()->back()->with('success', 'Настройки чата обновлены.');
+    }
+    
     
 }

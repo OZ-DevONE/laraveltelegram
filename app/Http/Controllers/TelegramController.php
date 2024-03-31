@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TelegramGroup;
+use App\Models\UserSetting;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TelegramController extends Controller
@@ -56,15 +57,22 @@ class TelegramController extends Controller
     {
         $chatId = $message->getChat()->getId();
         $text = $message->getText();
-
-        if ($this->containsBadWords($text)) {
-            $this->deleteMessageAndWarnUser($chatId, $message);
+    
+        // Получаем настройки для чата
+        $chatSettings = UserSetting::where('chat_id', $chatId)->first();
+    
+        // Проверяем, включена ли функция антимата для чата
+        if ($chatSettings && $chatSettings->is_feature_active) {
+            if ($this->containsBadWords($text, $chatSettings->bad_words_list)) {
+                $this->deleteMessageAndWarnUser($chatId, $message);
+            }
         }
-
+    
         if ($this->containsLink($text)) {
             $this->deleteMessageWithLink($chatId, $message);
         }
     }
+    
 
     private function deleteMessageAndWarnUser($chatId, $message)
     {
@@ -92,16 +100,16 @@ class TelegramController extends Controller
         ]);
     }
     
-    private function containsBadWords($text)
+    private function containsBadWords($text, $badWordsList)
     {
-        $badWords = ['блять', 'сука', 'хуйло', 'типа матное слово', 'хуй', 'пидорас', 'пидор', 'хуеглот', 'лох'];
-        foreach ($badWords as $word) {
+        foreach ($badWordsList as $word) {
             if (stripos($text, $word) !== false) {
                 return true;
             }
         }
         return false;
     }
+    
     
     private function containsLink($text)
     {

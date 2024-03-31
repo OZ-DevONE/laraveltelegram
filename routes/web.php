@@ -83,6 +83,8 @@ Route::get('/about', function () {
 Route::get('/chats/{id}/edit', [ChatController::class, 'edit'])->name('chats.edit');
 Route::put('/chats/{id}', [ChatController::class, 'update'])->name('chats.update');
 Route::delete('/chats/{id}', [ChatController::class, 'destroy'])->name('chats.destroy');
+Route::post('/user/settings/update', [HomeController::class, 'updateUserSettings'])->name('user.settings.update')->middleware('auth');
+
 
 //Для отображения карты сайта в формате html
 Route::get('/sitemap', function () {
