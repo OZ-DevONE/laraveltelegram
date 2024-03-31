@@ -13,7 +13,8 @@ class HomeController extends Controller
     public function home()
     {
         $userId = auth()->user()->id; // Получение ID текущего пользователя из auth
-    
+
+        // из модели TelegramGroup из разрешенных полей выдай мне данные пользователя а именно user_id и is_active с использованием пагинации
         $activeChats = TelegramGroup::where('user_id', $userId)
                                     ->where('is_active', true)
                                     ->paginate(5); 
@@ -21,14 +22,15 @@ class HomeController extends Controller
         $inactiveChats = TelegramGroup::where('user_id', $userId)
                                       ->where('is_active', false)
                                       ->paginate(5);
-    
+
+        // верни вью на home и задай activeChats inactiveChats
         return view('home', ['activeChats' => $activeChats, 'inactiveChats' => $inactiveChats]);
     }
     
-    
-
+    // Рассылка сообщений 
     public function sendToAllChats(Request $request)
     {
+        // полученные данные проверь на валидацию
         $validator = Validator::make($request->all(), [
             'text' => [
                 'required', 
@@ -44,6 +46,7 @@ class HomeController extends Controller
     
         // Проверка на ошибки валидации
         if ($validator->fails()) {
+            // верни назад с ошибко валидации и также сохрани введенные данные пользователя
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
@@ -51,10 +54,13 @@ class HomeController extends Controller
         $imageUrl = $request->input('image'); // URL изображения
 
         $userId = auth()->user()->id; // Получение ID текущего пользователя из auth
+
+        // из модели достань данные об активных чатах пользователя который авторизирован
         $activeChats = TelegramGroup::where('user_id', $userId)
                                     ->where('is_active', true)
                                     ->get();
 
+        // для каждого полученного активного чата мы делаем
         foreach ($activeChats as $chat) {    
             //Есть ссылка?    
             if ($imageUrl) {

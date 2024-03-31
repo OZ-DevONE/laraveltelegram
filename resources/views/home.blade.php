@@ -79,20 +79,26 @@
     </form>
 
     <h2>Активные чаты</h2>
+    {{-- Перебери весь массив переданных данных --}}
     @foreach ($activeChats as $chat)
         <div class="card mb-3">
             <div class="card-body">
+                {{-- из данных достань нужные мне --}}
                 <h5 class="card-title">{{ $chat->telegram_username }}</h5>
                 <p class="card-text">{{ $chat->chat_id }}</p>
+                {{-- вставь id чата в ссылку на редактирование --}}
                 <a href="{{ route('chats.edit', $chat->id) }}" class="btn btn-primary">Редактировать</a>
+                {{-- Форма удаление чата --}}
                 <form action="{{ route('chats.destroy', $chat->id) }}" method="POST" style="display:inline;">
                     @csrf
-                    @method('DELETE')
+                    {{-- метод laravel удали элемент вместо get --}}
+                    @method('DELETE') 
                     <button type="submit" class="btn btn-danger">Удалить</button>
                 </form>
             </div>
         </div>
     @endforeach
+    {{-- пагинация на активные чаты --}}
     {{ $activeChats->links() }}
     
     <h2>Неактивные чаты</h2>
@@ -111,6 +117,7 @@
             </div>
         </div>
     @endforeach
+    {{-- пагинация на не активные чаты --}}
     {{ $inactiveChats->links() }}
 </div>
 @endsection

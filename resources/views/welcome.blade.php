@@ -16,7 +16,7 @@
         min-height: 100%;
         width: auto;
         height: auto;
-        z-index: -1; /* Помещаем видео под контент */
+        z-index: -1; /* видео под контент */
         overflow: hidden;
     }
 
@@ -26,7 +26,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        object-fit: cover; /* Гарантирует, что видео будет покрывать весь элемент */
+        object-fit: cover;
     }
 
     .video-overlay {
@@ -35,25 +35,25 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный слой */
-        z-index: 1; /* Помещаем затемнение над видео */
+        background: rgba(0, 0, 0, 0.5); 
+        z-index: 1; 
     }
 
     /* Стиль кнопки */
     .btn-interactive {
-        transition: transform 0.2s, box-shadow 0.2s; /* Плавный переход для анимации */
+        transition: transform 0.2s, box-shadow 0.2s; 
     }
 
     /* Анимация при наведении */
     .btn-interactive:hover {
-        transform: scale(1.05); /* Немного увеличиваем кнопку */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Добавляем тень для эффекта "поднятия" */
+        transform: scale(1.05); 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
     }
 
     /* Анимация при нажатии */
     .btn-interactive:active {
-        transform: scale(0.95); /* "Проваливаем" кнопку */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Уменьшаем тень */
+        transform: scale(0.95); 
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
     }
 </style>
 <body class="d-flex h-100 text-center text-white bg-dark">
