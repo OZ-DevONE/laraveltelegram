@@ -13,16 +13,15 @@ return new class extends Migration
     {
         Schema::create('telegram_groups', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id'); // Добавляем колонку user_id
+            $table->unsignedBigInteger('user_id'); // Колонка user_id
             $table->string('telegram_username');
-            $table->string('chat_url')->nullable();
-            // $table->string('chat_id')->nullable();
+            $table->string('chat_id'); // Колонка chat_id добавлена без использования метода after()
             $table->boolean('is_active')->default(false);
             $table->timestamps();
 
             // Создаем внешний ключ, который ссылается на таблицу users
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        });       
+        });
     }
 
     /**
