@@ -39,15 +39,11 @@ class HomeController extends Controller
     // Рассылка сообщений 
     public function sendToAllChats(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'text' => 'required|string|max:255',
-            'image' => 'nullable|url|regex:/\.(jpeg|jpg|png|gif|mp4)$/i',
+            'image' => 'nullable|url|regex:/\\.(jpeg|jpg|png|gif|mp4)$/i',
             'chat_id' => 'required|exists:telegram_groups,id'
         ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
 
         $text = $request->input('text');
         $imageUrl = $request->input('image');
