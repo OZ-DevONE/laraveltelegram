@@ -41,7 +41,7 @@ class HomeController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'text' => 'required|string|max:255',
-            'image' => 'nullable|url|regex:/\.(jpeg|jpg|png|gif|mp4)$/i',
+            'image' => 'nullable|url|regex:/\\.(jpeg|jpg|png|gif|mp4)$/i',
             'chat_id' => 'required|exists:telegram_groups,id'
         ]);
 
@@ -101,7 +101,7 @@ class HomeController extends Controller
         $request->validate([
             'chat_id' => 'required|exists:telegram_groups,id',
             'bad_words_list' => 'nullable|string',
-            'is_feature_active' => 'required|in:0,1' // Обновлено для приема только '0' или '1'
+            'is_feature_active' => 'required|in:0,1'
         ]);
     
         $userId = auth()->user()->id;
@@ -110,7 +110,7 @@ class HomeController extends Controller
         // Преобразуем '0' и '1' в булев тип
         $isFeatureActive = $request->input('is_feature_active') == '1';
     
-        $userSetting = UserSetting::updateOrCreate(
+        UserSetting::updateOrCreate(
             [
                 'user_id' => $userId,
                 'chat_id' => $chatId
