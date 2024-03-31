@@ -119,9 +119,9 @@
                                       placeholder="Данных нету">{{ isset($userSettings[$chat->id]) ? implode(' ', $userSettings[$chat->id]->bad_words_list) : '' }}</textarea>
                         </div>
                         <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="isFeatureActive-{{ $chat->id }}" name="is_feature_active"
-                                   {{ isset($userSettings[$chat->id]) && $userSettings[$chat->id]->is_feature_active ? 'checked' : '' }}>
-                            <label class="form-check-label" for="isFeatureActive-{{ $chat->id }}">Включить антимат</label>
+                            <input type="hidden" name="is_feature_active" value="0">
+                            <input type="checkbox" class="form-check-input" id="isFeatureActive-{{ $chat->id }}" name="is_feature_active" value="1"
+                                   {{ isset($userSettings[$chat->id]) && $userSettings[$chat->id]->is_feature_active ? 'checked' : '' }}>                            
                         </div>
                         <button type="submit" class="btn btn-primary">Сохранить настройки</button>
                     </form>

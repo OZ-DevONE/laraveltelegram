@@ -101,15 +101,15 @@ class HomeController extends Controller
         $request->validate([
             'chat_id' => 'required|exists:telegram_groups,id',
             'bad_words_list' => 'nullable|string',
-            'is_feature_active' => 'nullable|boolean'
+            'is_feature_active' => 'required|in:0,1' // Обновлено для приема только '0' или '1'
         ]);
     
         $userId = auth()->user()->id;
         $chatId = $request->input('chat_id');
-        $badWordsList = $request->input('bad_words_list') ? explode(' ', $request->input('bad_words_list')) : []; // Преобразуем строку в массив, разделяя слова по пробелу
-        $isFeatureActive = $request->has('is_feature_active');
+        $badWordsList = $request->input('bad_words_list') ? explode(' ', $request->input('bad_words_list')) : [];
+        // Преобразуем '0' и '1' в булев тип
+        $isFeatureActive = $request->input('is_feature_active') == '1';
     
-        // Находим или создаем запись в модели UserSetting для данного пользователя и чата
         $userSetting = UserSetting::updateOrCreate(
             [
                 'user_id' => $userId,
@@ -122,7 +122,5 @@ class HomeController extends Controller
         );
     
         return redirect()->back()->with('success', 'Настройки чата обновлены.');
-    }
-    
-    
+    }    
 }
