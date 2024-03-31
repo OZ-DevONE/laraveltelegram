@@ -1,6 +1,6 @@
 {{-- Файл resources/views/about.blade.php --}}
 
-@extends('layouts.app')
+@extends('layaouts.app')
 
 @section('head')
 <link rel="stylesheet" href="{{ asset('/css/cover.css') }}"> 
