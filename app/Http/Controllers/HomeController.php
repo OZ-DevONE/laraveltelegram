@@ -41,7 +41,7 @@ class HomeController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'text' => 'required|string|max:255',
-            'image' => 'nullable|url|regex:/\\.(jpeg|jpg|png|gif|mp4)$/i',
+            'image' => 'nullable|url|regex:/\.(jpeg|jpg|png|gif|mp4)$/i',
             'chat_id' => 'required|exists:telegram_groups,id'
         ]);
 
