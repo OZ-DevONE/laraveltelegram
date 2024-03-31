@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id'); // Добавляем колонку user_id
             $table->string('telegram_username');
             $table->string('chat_url');
-            $table->string('chat_id')->nullable();
+            // $table->string('chat_id')->nullable();
             $table->boolean('is_active')->default(false);
             $table->timestamps();
 
